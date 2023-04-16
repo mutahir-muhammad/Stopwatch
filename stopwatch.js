@@ -1,8 +1,9 @@
 const showTime = document.getElementById("showTime");
+const showMilliseconds = document.getElementById("ms");
 const start = document.getElementById("start");
 const pause = document.getElementById("pause");
 const reset = document.getElementById("reset");
-
+ 
 let startTime = 0;
 let passedTime = 0;
 let currentTime = 0;
@@ -11,12 +12,14 @@ let interval;
 let hours = 0;
 let minutes = 0;
 let seconds = 0;
+let milliseconds = 0;
+let msDisplay;
 
 start.addEventListener('click', ()=>{
     if(pausedState){
         pausedState = false;
         startTime = Date.now() - passedTime;
-        interval = setInterval(updateTime, 75)
+        interval = setInterval(updateTime, 100)
     }
 });
 pause.addEventListener('click', ()=>{
@@ -31,6 +34,7 @@ reset.addEventListener('click', resetFunction);
 
 function updateTime(){
     passedTime = Date.now() - startTime;
+    milliseconds = Math.floor((passedTime % 1000) / 10);
     seconds = Math.floor((passedTime / 1000) % 60);
     minutes = Math.floor((passedTime / (1000*60)) % 60);
     hours = Math.floor((passedTime / (1000*3600)) % 60);
@@ -38,8 +42,8 @@ function updateTime(){
     seconds = addZero(seconds);
     minutes = addZero(minutes);
     hours = addZero(hours);
-
-    showTime.textContent = `${hours}:${minutes}:${seconds}`;
+    milliseconds = addZero(milliseconds);
+    showTime.textContent = `${hours}:${minutes}:${seconds}.${milliseconds}`;
 
     function addZero(unitTime){
         if((("0")+ unitTime).length > 2) return unitTime
@@ -55,5 +59,7 @@ function resetFunction(){
     hours = 0;
     minutes = 0;
     seconds = 0;
-    showTime.textContent = "00:00:00";
+    milliseconds = 0;
+    showTime.textContent = "00:00:00:00";
+
 }
